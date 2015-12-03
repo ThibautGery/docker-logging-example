@@ -1,0 +1,28 @@
+---
+
+- name: set correct data
+  file:
+    dest: "{{ app_directory }}"
+    state: directory
+    owner: "{{ app_user }}"
+    mode: 0744
+    recurse: yes
+  tags: app
+
+
+
+- name: set docker-compose template
+  template:
+    src: "docker-compose.yml.j2"
+    dest: "{{ app_directory }}/docker-compose.yml"
+    owner: "{{ app_user }}"
+  tags: app
+
+
+- name: Restart containers
+  shell: docker-compose stop && docker-compose rm -f && docker-compose up -d
+  args:
+    chdir: "{{ app_directory }}"
+  become_user: "{{ app_user }}"
+  tags: update_app
+  tags: app

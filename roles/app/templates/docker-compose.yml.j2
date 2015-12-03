@@ -1,0 +1,7 @@
+nginx:
+  image: thibautgery/docker-nginx
+  ports:
+    - 80:80
+  log_driver: fluentd
+  log_opt:
+    fluentd-tag: "nginx.docker.{{ '{{' }}.Name {{ '}}' }}"
