@@ -1,5 +1,11 @@
 ---
 
+- hosts: app
+  become: true
+  roles:
+  - docker
+
+
 - hosts: es
   become: true
   roles:

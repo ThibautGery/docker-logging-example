@@ -1,2 +1,5 @@
+[app]
+192.168.56.45 app_user=vagrant ansible_ssh_user=vagrant
+
 [es]
 192.168.56.46 app_user=vagrant ansible_ssh_user=vagrant
