@@ -1,0 +1,9 @@
+kibana_version: 4.2.0
+kibana_name: "kibana-{{ kibana_version }}-linux-x64"
+kibana_file_name: "{{ kibana_name }}.tar.gz"
+kibana_url_tar: "https://download.elastic.co/kibana/kibana/{{ kibana_file_name }}"
+kibana_base_folder: "/opt/kibana"
+kibana_folder: "{{ kibana_base_folder }}/{{ kibana_name }}"
+kibana_folder_symlink: "{{ kibana_base_folder }}/current"
+kibana_binary: "{{ kibana_base_folder }}/kibana-{{ kibana_version }}-linux-x64.tar.gz"
+kibana_user: kibana

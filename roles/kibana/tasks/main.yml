@@ -1,0 +1,64 @@
+- name: Add kibana user
+  user:
+    name: "{{ kibana_user }}"
+    shell: /bin/bash
+  tags: kibana
+
+- name: create binary folder
+  file:
+    state: directory
+    path: "{{ kibana_base_folder }}"
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_user }}"
+  tags: kibana
+
+- name: Download kibana
+  get_url:
+    url: "{{ kibana_url_tar }}"
+    dest: "{{ kibana_base_folder }}"
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_user }}"
+  tags: kibana
+
+- name: unarchive kibana
+  unarchive:
+    copy: no
+    src: "{{ kibana_binary }}"
+    dest: "{{ kibana_base_folder }}"
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_user }}"
+  tags: kibana
+
+
+- name: create current kibana
+  file:
+    src: "{{ kibana_folder }}"
+    dest: "{{ kibana_folder_symlink }}"
+    owner: "{{ kibana_user }}"
+    group: "{{ kibana_user }}"
+    state: link
+  tags: kibana
+
+- name: create service
+  template:
+    src: service.j2
+    dest: /etc/init.d/kibana
+    group: "{{ kibana_user }}"
+    mode: 750
+  notify: restart kibana
+  tags: kibana
+
+- name: create default
+  template:
+    src: default.j2
+    dest: /etc/default/kibana
+    mode: 644
+  notify: restart kibana
+  tags: kibana
+
+- name: ensure kibana service startup at boot
+  service:
+    name: elasticsearch
+    enabled: yes
+    state: started
+  tags: kibana

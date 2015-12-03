@@ -10,3 +10,4 @@
   become: true
   roles:
   - elasticsearch
+  - kibana
