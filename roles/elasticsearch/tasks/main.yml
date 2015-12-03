@@ -4,17 +4,20 @@
     file:
       state: directory
       path: "{{ es_folder }}"
+    tags: es
 
   - name: Get debian package
     get_url:
       url: "{{ es_url_deb }}"
       dest: "{{ es_binary }}"
     register: logstash_debian_package
+    tags: es
 
   - name: install the debian package
     apt:
       deb: "{{ es_binary }}"
     when: logstash_debian_package.changed
+    tags: es
 
   - name: config ES
     template:
@@ -24,9 +27,16 @@
       group: elasticsearch
       mode: 750
     notify: restart elasticsearch
+    tags: es
 
   - name: ensure elasticsearch service startup at boot
     service:
       name: elasticsearch
       enabled: yes
       state: started
+    tags: es
+
+  - include: plugins.yml
+    tags:
+      - es
+      - es-plugins

@@ -14,7 +14,7 @@
 #
 # Use a descriptive name for your cluster:
 #
-# cluster.name: my-application
+cluster.name: docker-logging-example
 #
 # ------------------------------------ Node ------------------------------------
 #
@@ -51,7 +51,7 @@
 #
 # Set the bind adress to a specific IP (IPv4 or IPv6):
 #
-network.host: 192.168.56.26
+network.host: {{ inventory_hostname }}
 #
 # Set a custom port for HTTP:
 #

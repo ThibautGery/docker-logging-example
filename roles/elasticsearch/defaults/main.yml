@@ -2,3 +2,6 @@ es_version: 2.0.0
 es_url_deb: "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/{{ es_version }}/elasticsearch-{{ es_version }}.deb"
 es_folder: "/opt/es"
 es_binary: "{{ es_folder }}/es-{{ es_version }}.deb"
+es_install_plugins:
+  - name: hq
+    path: royrusso/elasticsearch-HQ
