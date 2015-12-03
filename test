@@ -1,0 +1,2 @@
+[es]
+192.168.56.46 app_user=vagrant ansible_ssh_user=vagrant

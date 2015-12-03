@@ -1,0 +1,6 @@
+
+---
+- name: Install java package
+  apt: name={{ item }} state=installed update_cache=yes
+  with_items: java_packages
+  tags: java

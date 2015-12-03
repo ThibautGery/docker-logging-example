@@ -1,0 +1,6 @@
+---
+
+- hosts: es
+  become: true
+  roles:
+  - elasticsearch

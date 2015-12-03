@@ -1,0 +1,32 @@
+---
+
+  - name: create binary folder
+    file:
+      state: directory
+      path: "{{ es_folder }}"
+
+  - name: Get debian package
+    get_url:
+      url: "{{ es_url_deb }}"
+      dest: "{{ es_binary }}"
+    register: logstash_debian_package
+
+  - name: install the debian package
+    apt:
+      deb: "{{ es_binary }}"
+    when: logstash_debian_package.changed
+
+  - name: config ES
+    template:
+      src: elasticsearch.yml.j2
+      dest: /etc/elasticsearch/elasticsearch.yml
+      owner: root
+      group: elasticsearch
+      mode: 750
+    notify: restart elasticsearch
+
+  - name: ensure elasticsearch service startup at boot
+    service:
+      name: elasticsearch
+      enabled: yes
+      state: started
