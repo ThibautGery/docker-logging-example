@@ -3,7 +3,7 @@
 - hosts: app
   become: true
   roles:
-  - docker
+  - fluentd
 
 
 - hosts: es

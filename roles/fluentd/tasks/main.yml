@@ -1,0 +1,26 @@
+---
+  - name: set fluentd conf directory
+    file:
+      path: "{{ fluentd_conf_directory }}"
+      state: directory
+    tags: fluentd
+
+  - name: set fluentd conf
+    template:
+      src: "{{ fluentd_conf_file_name }}.j2"
+      dest: "{{ fluentd_conf_file_path }}"
+    tags: fluentd
+
+  - name: data container
+    docker:
+      name: fluentd
+      image: thibautgery/fluent.d-es
+      pull: always
+      state: restarted
+      ports: "24224:24224"
+      volumes:
+        - "{{ fluentd_conf_directory }}:/fluentd/etc/"
+      env:
+        FLUENTD_CONF: "{{ fluentd_conf_file_name }}"
+      restart_policy: always
+    tags: fluentd
