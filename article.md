@@ -2,7 +2,7 @@ Centralize logs from docker applications
 ========================================
 
 The purpose of the article is to show how we can centralize logs from docker
-application in a database where we can run query on them.
+application in a database where we can query them.
 
 
 This article will be build around an example where our application will only be
@@ -38,7 +38,7 @@ database, Elasticsearch and Kibana.
 
 ### Flux
 
-Our containerized application will send its logs from the stdout and stderr to
+Our containerized application will send its logs to the stdout and stderr. Then the fluentd driver will redirect the logs to
 Fluentd running locally in a container. Fluentd will parse and structure them.
 Finally it will send them to elasticsearch.
 
@@ -83,7 +83,7 @@ It has multiple kind of plugins but the most important one are:
  * [Input plugins](http://docs.fluentd.org/articles/input-plugin-overview)
  to accept and parse data
  * [Output plugins](http://docs.fluentd.org/articles/output-plugin-overview)
- to modify the data
+ to send the data to extern system
 
 We need to configure it in `./conf/fluent.conf`:
 
@@ -125,9 +125,9 @@ nginx:
   log_opt:
     fluentd-tag: "nginx.docker.{{.Name }}"
 ```
-By default docker use docker.{{ container id }}. We override it to be
-nginx.docker.{{ container name }}. It's important that the tag match the one in
-fluentd You should be able to see the nginx logs in fluentd container log.
+By default the docker-fluentd driver use a default tag: "docker.{{ container id }}". We override it to be
+"nginx.docker.{{ container name }}". It's important that the tag match the one in
+Fluentd You should be able to see the Nginx logs in Fluentd container log.
 
 Right now, our system is useless. We need to send the log to a distant database,
 Elasticsearch.
@@ -135,7 +135,7 @@ Elasticsearch.
 
 ### Fluentd push its log to Elasticsearch
 
-Fluentd will need a [plugin](https://github.com/uken/fluent-plugin-elasticsearch)
+Fluentd will need the [fluent-plugin-elasticsearch](https://github.com/uken/fluent-plugin-elasticsearch)
 in order to send data to Elasticsearch. I have package the image [here](https://hub.docker.com/r/thibautgery/fluent.d-es)
 
 We need to update the configuration in `./conf/fluent.conf`:
@@ -168,7 +168,7 @@ fluentd:
 Then you can run the application and query it with your favorite browser to see
 a few line in elasticsearch in the logstash index.
 
-Unfortunately, the data are not indexed. The nginx line of log is still not
+Unfortunately, the data are not indexed. The Nginx line of log is not
 structured: for example, we cannot query all the failed HTTP request (status code >= 400)
 
 This line of log need to be parsed.
@@ -176,7 +176,7 @@ This line of log need to be parsed.
 ### Structure the application logs
 
 
-Fluentd will need a [plugin](https://github.com/tagomoris/fluent-plugin-parser)
+Fluentd will need the [fluent-plugin-parser](https://github.com/tagomoris/fluent-plugin-parser)
 in order to format a specific field a second time. I have package the image with it [here](https://hub.docker.com/r/thibautgery/fluent.d-es)
 
 We need to update the configuration in `./conf/fluent.conf`:
@@ -204,7 +204,7 @@ We need to update the configuration in `./conf/fluent.conf`:
 The second block of configuration will :
 
  * use the plugin parser
- * parse the field logs
+ * parse the field `logs`
  * parse it using the pre-build Regex of Nginx
  * remove the prefix `nginx` on the tag `nginx.docker.**`
  * keep the previous informations in the message and emit it as `docker.**`
@@ -219,6 +219,7 @@ Conclusion
 We have cover how to collect and structure logs from docker to push them in
 Elasticsearch. You can easily change the Elasticsearch plugin to the [Mongo](https://github.com/fluent/fluent-plugin-mongo) or
 [HDFS](https://github.com/fluent/fluent-plugin-webhdfs/) plugin and push the log to the database of your choice.
+You can also add a alerting system like [Zabbix](https://github.com/fujiwara/fluent-plugin-zabbix)
 
 Keep in mind that this article doesn't cover everything :
 
