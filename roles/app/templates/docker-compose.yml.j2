@@ -6,5 +6,5 @@ nginx:
   labels:
     service: nginx
   log_opt:
-    tag: "nginx.docker.{{ '{{' }}.Name {{ '}}' }}"
+    fluentd-tag: "nginx.docker.{{ '{{' }}.Name {{ '}}' }}"
     labels: service

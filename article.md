@@ -29,7 +29,7 @@ collector for unified logging layer. Docker provides a [driver](https://docs.doc
 directly into Fluentd. It also has lots of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
 Elasticsearch.
 
-I choose fluentd because it's used in some important docker project
+I chose fluentd because it's used in some important docker project
 like [Kubernetes](http://kubernetes.io/) and the Elasticsearch plugin
 play well with Kibana.
 
@@ -37,16 +37,20 @@ We now need two server, one for our application and Fluentd and one for our
 database, Elasticsearch and Kibana.
 
 ### Flux
+The flux can be describe in 5 steps
 
-Our containerized application will send its logs to the stdout and stderr. Then the fluentd driver will redirect the logs to
-Fluentd running locally in a container. Fluentd will parse and structure them.
-Finally it will send them to elasticsearch.
+ 1. The users will connect to our application (nginx) and this will generate
+ logging
+ 2. Our containerized application will send its logs to the stdout and stderr
+ 3. Fluentd driver will redirect the logs to the Fluentd container running
+ locally
+ 4. Fluentd will parse and structure the logs
+ 5. The structured data will be send to elasticsearch by batch, you might have to
+ wait a minute or two. You can parameterize this behavior with the [Buffer plugins](http://docs.fluentd.org/articles/buffer-plugin-overview)
+ 6. The data is exposed to the administrators through graphs and diagrams with
+ Kibana
 
-==>
-
-==> INSERER UN SCHEMA DE L'ARCHITECTURE
-
-==>
+![fluentd docker flux schema](http://i.imgur.com/cTTH3Fi.jpg)
 
 
 ### Security
@@ -211,6 +215,19 @@ The second block of configuration will :
 
 Then you can run the application and query it with your favorite browser to see
 the data correctly formated in Kibana.
+
+Run it
+------
+
+Your system will collect your logs from your application and send it to
+Elasticsearch. The docker engine will require to have Fluentd up and running to
+start your container.
+
+Nevertheless if Fluentd die, your containers using Fluentd will continue to
+work properly. Furthermore, if Fluentd don't stop for too long, you won't loose
+any logs because the docker engine log driver buffer the message not sent to send
+them again when Fluentd is available.
+
 
 
 Conclusion
