@@ -3,5 +3,8 @@ nginx:
   ports:
     - 80:80
   log_driver: fluentd
+  labels:
+    service: nginx
   log_opt:
-    fluentd-tag: "nginx.docker.{{ '{{' }}.Name {{ '}}' }}"
+    tag: "nginx.docker.{{ '{{' }}.Name {{ '}}' }}"
+    labels: service
