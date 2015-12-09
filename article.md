@@ -33,14 +33,14 @@ plays well with Kibana.
 
 ### Infrastructure
 
-We could use two types of infrastructure: classic with server and cloud. I chose
+We could use two types of infrastructure: classic with servers or cloud. I chose
 to use the classic one for simplicity.
 
 We now need two server, one for our application and Fluentd and one for our
 database, Elasticsearch and Kibana.
 
 ### Flux
-The flux can be describe in 5 steps
+The flux can be described in 6 steps
 
  1. Users connect to our application (nginx) and this generates
  logs
@@ -93,16 +93,17 @@ Each steps define how to treat data:
  * The first step define how to capture the data, here on port 8888 using HTTP.
  * The second step define how the output the data, here print it on stdout.
 
-You can configure capture and parse different stream of data, and tags help you
+You can capture and parse different stream of data, and tags help you
 to identify the data in the system. In the previous example the tag is specified
 after match `app.access`. Each data is tagged with a string and that way we can
 apply different steps to different kind of data.
 
-For example running `curl http://this.host:8888/myapp.access?json={"event":"data"}`
+For example running `curl http://localhost:8888/myapp.access?json={"event":"data"}`
 will output `{"event":"data"}``to stdout
 
 
-It has multiple kind of plugins but the most important are:
+Each steps is a plugin. There is more than 150 plugins divided in 6 categories.
+The most important ones are:
 
  * [Input plugins](http://docs.fluentd.org/articles/input-plugin-overview)
  to accept and parse data
@@ -164,12 +165,12 @@ nginx:
   log_opt:
     fluentd-tag: "nginx.docker.{{.Name }}"
 ```
-By default the docker-fluentd driver use a default tag: `docker._container_id_ `.
-We override it to be `nginx.docker._container_name_` with the `log_opt` :
+By default the docker-fluentd driver use a default tag: `docker._container-id_ `.
+We override it to be `nginx.docker._container-name_` with the `log_opt`,
 `fluentd-tag: "nginx.docker.{{.Name }}"`. It's important that the tag match the
 one in Fluentd. You should be able to see the Nginx logs in Fluentd container log.
 
-Right now, our system is useless. We need to send the log to a distant database,
+Right now, our system is useless. We need to send logs to a distant database,
 Elasticsearch.
 
 
@@ -214,7 +215,7 @@ fluentd:
     - ./conf:/fluentd/etc
 ```
 Then you can run the application and query it with your favorite browser to see
-a few line in Elasticsearch in the Logstash index. Since Fluentd buffer the data
+some lines in Elasticsearch in the Logstash index. Since Fluentd buffer the data
 before sending it by batch, you might have to wait a minute or two.
 
 Unfortunately, the data are not indexed. The Nginx line of log is not
@@ -261,8 +262,8 @@ The second block of configuration will :
  * keep the previous informations in the message and emit it as `docker.**`
 
 Here we use the system of tag to route the data to the correct steps:
-  * the data arrives with `nginx.docker._container_name_` and go through the second step
-  * the tag is modified to `docker._container_name_` and go through the third step
+  * the data arrives with `nginx.docker._container-name_` and go through the second step
+  * the tag is modified to `docker._container-name_` and go through the third step
 
 Then you can run the application and query it with your favorite browser to see
 the data correctly formated in Kibana.
@@ -285,14 +286,13 @@ Conclusion
 
 We have cover how to collect and structure logs from docker to push them in
 Elasticsearch. You can easily change the Elasticsearch plugin to the [Mongo](https://github.com/fluent/fluent-plugin-mongo) or
-[HDFS](https://github.com/fluent/fluent-plugin-webhdfs/) plugin and push the log to the database of your choice.
+[HDFS](https://github.com/fluent/fluent-plugin-webhdfs/) plugin and push logs to the database of your choice.
 You can also add an alerting system like [Zabbix](https://github.com/fujiwara/fluent-plugin-zabbix)
 
-You can now add multiple containers in the node and add nodes in your infrastructure.
-keep in mind that this article doesn't cover everything :
+You can add node to your infrastructure and add several containers in one node.
+Keep in mind that this article doesn't cover everything :
 
  * how to monitor the docker running fluentd ?
  * how to keep high availability in the monitoring system ?
 
-
- You can run everything in two commands with the [Ansible scripted repository](https://github.com/ThibautGery/docker-logging-example)
+You can run everything in two commands with the [Ansible scripted repository](https://github.com/ThibautGery/docker-logging-example)

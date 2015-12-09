@@ -198,3 +198,7 @@
   action: setup
   when: ansible_docker0 is not defined
   tags: docker
+
+- name: wait for the socket
+  wait_for:
+    path: /var/run/docker.sock
