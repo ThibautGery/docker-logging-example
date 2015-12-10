@@ -5,7 +5,7 @@ The purpose of the article is to show how we can centralize logs from docker
 application in a database where we can query them.
 
 
-This article will be build around an example where our application will only be
+This article will be built around an example where our application will only be
 nginx and our database will be Elasticsearch and Kibana to show beautiful graphs
 and diagrams. The code of the example is available on [github](https://github.com/ThibautGery/docker-logging-example).
 
@@ -27,8 +27,8 @@ collector for unified logging layer. Docker provides a [driver](https://docs.doc
 directly into Fluentd. It also has lots of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
 Elasticsearch.
 
-I chose fluentd because it's used in some important docker project
-like [Kubernetes](http://kubernetes.io/) and Elasticsearch's plugin
+I chose fluentd because docker pushes it, [Kubernetes](http://kubernetes.io/)
+(an important docker project) uses it. Furthermore Elasticsearch's plugin
 plays well with Kibana.
 
 ### Infrastructure
@@ -39,8 +39,8 @@ to use the classic one for simplicity.
 We now need two server, one for our application and Fluentd and one for our
 database, Elasticsearch and Kibana.
 
-### Flux
-The flux can be described in 6 steps
+### Process
+The process can be described in 6 steps
 
  1. Users connect to our application (nginx) and this generates
  logs
@@ -53,12 +53,12 @@ The flux can be described in 6 steps
  6. Data is exposed to administrators through graphs and diagrams with
  Kibana
 
-![fluentd docker flux schema](http://i.imgur.com/cTTH3Fi.jpg)
+![fluentd docker process schema](http://i.imgur.com/cTTH3Fi.jpg)
 
 
 ### Application
 
-The application is a simple nginx, it's not the official image because the
+The application is a simple nginx, it is not the official image because the
 access log are not using the default format so I packaged a [new image](https://hub.docker.com/r/thibautgery/docker-nginx)
 You can run the app using `docker-compose up` with the following Configuration
 
@@ -167,8 +167,9 @@ nginx:
 ```
 By default the docker-fluentd driver use a default tag: `docker._container-id_ `.
 We override it to be `nginx.docker._container-name_` with the `log_opt`,
-`fluentd-tag: "nginx.docker.{{.Name }}"`. It's important that the tag match the
-one in Fluentd. You should be able to see the Nginx logs in Fluentd container log.
+`fluentd-tag: "nginx.docker.{{.Name }}"`. The tag in the docker driver must
+match the one in Fluentd. You should be able to see the Nginx logs in Fluentd
+container log.
 
 Right now, our system is useless. We need to send logs to a distant database,
 Elasticsearch.
@@ -275,10 +276,10 @@ Your system will collect your logs from your application and send it to
 Elasticsearch. The docker engine will require to have Fluentd up and running to
 start your container.
 
-Nevertheless if Fluentd die, your containers using Fluentd will continue to
-work properly. Furthermore, if Fluentd stop for short period of time, you won't loose
-any logs because the docker engine buffer the messages not sent. They are sent
-again when Fluentd is, once again, available.
+Nevertheless if Fluentd dies, your containers using Fluentd will continue to
+work properly. Furthermore, if Fluentd stop for short period of time, you will
+not loose any logs because the docker engine buffer the messages not sent. They
+are sent again when Fluentd is, once again, available.
 
 
 Conclusion
