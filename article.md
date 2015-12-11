@@ -74,9 +74,9 @@ nginx:
 
 ### Fluentd
 
-Fluentd is a middleware for logs, they flow through steps and are identified with
-tags. Here is a simple configuration to receive logs through HTTP and print them
-to stdout:
+Fluentd is a middleware to collect logs, they flow through steps and are identified
+with tags. Here is a simple configuration with two steps to receive logs through
+HTTP and print them to stdout:
 
 ```
 $ cat ./fluentd/fluentd.sample
@@ -90,18 +90,20 @@ $ cat ./fluentd/fluentd.sample
 </match>
 ```
 
-Each step defines how to treat data:
+In this sample, each step defines how to treat data:
 
  * The first step defines how to capture the data, here on port 8888 using HTTP.
  * The second step defines how the output the data, here print it on stdout.
 
-You can capture and parse different stream of data, and tags help you
-to identify the data in the system. In the previous example the tag is specified
-after match `app.access`. Each data is tagged with a string and that way we can
-apply different steps to different kind of data.
+The data is streamed through Fluentd. Each chunk of data is tagged with a label.
+This tag is used to route the data between the different steps.
+
+In the previous example the tag is specified after the key `match` : `app.access`.
 
 For example running `curl http://localhost:8888/myapp.access?json={"event":"data"}`
 will output `{"event":"data"}` to stdout
+
+You can learn more in this [slideshare](http://www.slideshare.net/treasure-data/the-basics-of-fluentd)
 
 
 Each steps is a plugin. There is more than 150 plugins divided in 6 categories.
