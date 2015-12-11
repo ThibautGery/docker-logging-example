@@ -64,7 +64,7 @@ The process can be described in 6 steps
  6. Data is exposed to administrators through graphs and diagrams with
  Kibana
 
-![Fluentd Docker process schema](http://i.imgur.com/cTTH3Fi.jpg)
+![Fluentd Docker process schema](http://i.imgur.com/SW57gC7.png)
 
 
 ### Application
