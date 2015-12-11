@@ -108,7 +108,7 @@ The data is streamed through Fluentd. Each chunk of data is tagged with a label.
 This tag is used to route the data between the different steps.
 
 In the previous example the tag is specified after the key `match` : `app.access`.
-
+The tag of the data incoming is the URL of the request.
 For example running `curl http://localhost:8888/myapp.access?json={"event":"data"}`
 will output `{"event":"data"}` to stdout.
 
@@ -179,7 +179,7 @@ nginx:
   log_opt:
     Fluentd-tag: "nginx.Docker.{{.Name }}"
 ```
-By default the Docker-Fluentd driver uses a default tag: `Docker._container-id_ `.
+By default the Docker driver uses a default tag for Fluentd: `Docker._container-id_ `.
 We override it to be `nginx.Docker._container-name_` with the `log_opt`,
 `Fluentd-tag: "nginx.Docker.{{.Name }}"`. The tag in the Docker driver must
 match the one in Fluentd. You should be able to see the Nginx logs in Fluentd
@@ -276,9 +276,18 @@ The second block of configuration will :
  * remove the prefix `nginx` on the tag `nginx.docker.**`
  * keep the previous informations in the message and emit it as `docker.**`
 
+
+
 Here we use the tag's concept to route the data to the correct steps:
-  * the data arrives with `nginx.docker._container-name_` and goes through the second step
-  * the tag is modified to `docker._container-name_` and the data goes through the third step
+
+![Flow diagram of fluentd](http://i.imgur.com/9YeOcod.png)
+
+  1. the data arrive with the tag setup by docker driver :
+`nginx.docker._container-name_`
+  2. Fluentd send it to the second step
+  3. the tag is modified to `docker._container-name_`
+  4. the data goes through the third step
+  5. the data are sent to Elasticsearch
 
 Then you can run the application and query it with your favorite browser to see
 the data correctly formated in Kibana.
