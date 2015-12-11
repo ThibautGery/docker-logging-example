@@ -267,7 +267,6 @@ $ cat ./conf/Fluentd
   logstash_format true
 </match>
 ```
-![Kibana result structured](http://i.imgur.com/nnzgQ3g.png)
 
 The second block of configuration will :
 
@@ -283,6 +282,9 @@ Here we use the tag's concept to route the data to the correct steps:
 
 Then you can run the application and query it with your favorite browser to see
 the data correctly formated in Kibana.
+
+You can create diagrams from these data :
+![Kibana result structured](http://i.imgur.com/nnzgQ3g.png)
 
 Run it
 ------
