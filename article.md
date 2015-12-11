@@ -223,11 +223,13 @@ Fluentd:
 Then you can run the application and query it with your favorite browser to see
 some lines in Elasticsearch in the Logstash index. Since Fluentd buffers the data
 before sending them by batch, you might have to wait a minute or two.
-//ajout d'un screen shot
 
-// il y a déjà des méta data
-Unfortunately, the data are not indexed. The Nginx line of log is not
-structured: for example, we cannot query all failed HTTP requests (status code >= 400)
+![Kibana result unstructured](http://i.imgur.com/cXrFzEO.png)
+
+
+Unfortunately, only the meta data of Docker are sent (like the docker name, label, id...)
+but the field log is the logs from nginx and they are not structured. For
+example, we cannot query all failed HTTP requests (status code >= 400)
 
 This line of log need to be parsed.
 
@@ -260,7 +262,8 @@ $ cat ./conf/Fluentd
   logstash_format true
 </match>
 ```
-//ajout d'un screen shot
+![Kibana result structured](http://i.imgur.com/nnzgQ3g.png)
+
 The second block of configuration will :
 
  * use the plugin parser
