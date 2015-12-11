@@ -70,7 +70,7 @@ The process can be described in 6 steps
 ### Application
 
 The application is a simple nginx, it is not the official image because the
-access logs are not using the default format so I packaged a [new image](https://hub.Docker.com/r/thibautgery/Docker-nginx)
+official image uses a custom logger so I packaged a [new image](https://hub.Docker.com/r/thibautgery/Docker-nginx)
 You can run the app using `Docker-compose up` with the following Configuration
 
 ```
@@ -209,15 +209,11 @@ $ cat ./conf/Fluentd
   logstash_format true
 </match>
 ```
-Don't forget to change the hosts to point to your elasticsearch instance.
+Don't forget to change the hosts to point to your Elasticsearch instance.
 
 The `logstash_format true` configuration is meant to make writing data into
 ElasticSearch compatible with what Logstash writes. By doing this, one could
 take advantage of Kibana.
-
-If you use an unsecured network (like internet), you can put basic authentication
-in front on your elasticsearch and put the credentials in the url in the Fluentd
-configuration.
 
 You can run Fluentd with:
 ```
@@ -302,7 +298,7 @@ work properly. Furthermore, if Fluentd stop for short periods of time, you will
 not lose any logs because the Docker engine buffers the messages not sent. They
 are sent again when Fluentd is back online.
 
-Finally, since 1.9 version you can show labels and environment variable with the
+Finally, since Docker 1.9 you can show labels and environment variable with the
 logging driver of Docker. In our example, we added : `service: nginx` and it will
 be shown in Kibana.
 
