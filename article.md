@@ -291,6 +291,9 @@ work properly. Furthermore, if Fluentd stop for short period of time, you will
 not loose any logs because the Docker engine buffer the messages not sent. They
 are sent again when Fluentd is back online.
 
+Finally, since 1.9 version you can show labels and environment variable with the
+logging driver of Docker. In our example, we added : `service: nginx` and it will
+be shown in Kibana.
 
 Conclusion
 ----------
