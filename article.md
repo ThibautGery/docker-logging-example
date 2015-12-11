@@ -284,7 +284,7 @@ Then you can run the application and query it with your favorite browser to see
 the data correctly formated in Kibana.
 
 You can create diagrams from these data :
-![Kibana result structured](http://i.imgur.com/nnzgQ3g.png)
+![Kibana result structured](http://i.imgur.com/SYVSPLH.png)
 
 Run it
 ------
