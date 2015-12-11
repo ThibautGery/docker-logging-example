@@ -9,6 +9,11 @@ This article will be built around an example where our application will only be
 nginx and our database will be Elasticsearch and Kibana to show beautiful graphs
 and diagrams. The code of the example is available on [github](https://github.com/ThibautGery/Docker-logging-example).
 
+The logging system is plugged at the container level because, the application
+should be loosely coupled with the logging system. Depending on the environment
+(development, pre-production, production) you might not send logs to the same
+system: a file for development, elasticseach for pre-production, elasticseach
+and HDFS for production.
 
 Architecture
 ------------
