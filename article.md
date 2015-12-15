@@ -311,6 +311,7 @@ logging driver of Docker. In our example, we added : `service: nginx` and it is
 shown in Kibana.
 
 We are now able to create graphs:
+
 ![status code pie](http://i.imgur.com/LZA4Y4V.png)
 
 Conclusion
