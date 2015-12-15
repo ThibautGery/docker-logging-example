@@ -33,7 +33,7 @@ or [Fluentd](http://www.fluentd.org/).
 with Elasticsearch and Kibana. It has lots of plugins.
 [Fluentd](http://www.fluentd.org/) describes itself as an open source data
 collector for unified logging layer. Docker provides a [driver](https://docs.docker.com/engine/reference/logging/fluentd/) to push logs
-directly into Fluentd. It also has a lot of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
+directly into Fluentd. Fluentd also has a lot of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
 Elasticsearch.
 
 I chose Fluentd because Docker pushes it, and [Kubernetes](http://kubernetes.io/)
