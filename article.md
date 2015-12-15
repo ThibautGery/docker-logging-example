@@ -11,7 +11,7 @@ and diagrams. The code of the example is available on [github](https://github.co
 
 We need to collect and transport our logs from a distributed system to a
 centralize remote location in real time with reliability. That way, we can get
-a aggregate vision of the system in near real time.
+an aggregate vision of the system in almost real time.
 
 The logging system is plugged at the container level because the application
 should be loosely coupled with the logging system. Depending on the environment
@@ -24,7 +24,7 @@ Architecture
 
 ### Choosing our middleware
 
-We need a tool to extract the logs from the Docker container and push them in [Elasticsearch](https://www.elastic.co/products/elasticsearch). To do that, we
+We need a tool to extract the logs from the Docker container and push them in [Elasticsearch](https://www.elastic.co/products/elasticsearch). In order to do that, we
 can use multiple tools like [Logstash](https://www.elastic.co/products/logstash)
 or [Fluentd](http://www.fluentd.org/).
 
@@ -33,19 +33,19 @@ or [Fluentd](http://www.fluentd.org/).
 with Elasticsearch and Kibana. It has lots of plugins.
 [Fluentd](http://www.fluentd.org/) describes itself as an open source data
 collector for unified logging layer. Docker provides a [driver](https://docs.docker.com/engine/reference/logging/fluentd/) to push logs
-directly into Fluentd. It also has lots of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
+directly into Fluentd. It also has a lot of plugins like [one](https://github.com/uken/fluent-plugin-elasticsearch) to connect to
 Elasticsearch.
 
-I chose Fluentd because Docker pushes it, [Kubernetes](http://kubernetes.io/)
+I chose Fluentd because Docker pushes it, and [Kubernetes](http://kubernetes.io/)
 (an important Docker project) uses it. Furthermore Elasticsearch's plugin
 plays well with Kibana.
 
 ### Infrastructure
 
-We could use two types of infrastructure: classic with servers or cloud. I chose
+We could use two types of infrastructure: either a classical architecture with servers or cloud. I chose
 to use the classic one for simplicity.
 
-We now need two servers, one for our application and Fluentd and one for our
+Therefore two servers are needed, one for our application and Fluentd and one for our
 database, Elasticsearch and Kibana.
 
 ### Process
@@ -57,7 +57,7 @@ The process can be described in 6 steps
  3. Docker intercepts logs from the container and uses its native Fluentd output
  driver to send them to the Fluentd container running locally
  4. Fluentd parses and structures logs
- 5. Structured data are sent to elasticsearch by batch, you might have to
+ 5. Structured data are sent to elasticsearch in batches, you might have to
  wait a minute or two for the data to arrive in Elasticsearch. You can
  parameterize this behavior with the
  [Buffer plugins](http://docs.fluentd.org/articles/buffer-plugin-overview)
@@ -69,8 +69,8 @@ The process can be described in 6 steps
 
 ### Application
 
-The application is a simple nginx, it is not the official image because the
-official image uses a custom logger so I packaged a [new image](https://hub.Docker.com/r/thibautgery/Docker-nginx)
+The application is a simple nginx, I packaged a [new image](https://hub.Docker.com/r/thibautgery/Docker-nginx) since
+the official one uses a custom logger that is not appropriate for our purpose.
 You can run the app using `Docker-compose up` with the following Configuration
 
 ```
@@ -102,13 +102,13 @@ $ cat ./fluentd/fluentd.sample
 In this sample, each step defines how to treat data:
 
  * The first step defines how to capture the data, here on port 8888 using HTTP.
- * The second step defines how the output the data, here print it on stdout.
+ * The second step defines how to output the data, in this case by printing it on stdout.
 
 The data is streamed through Fluentd. Each chunk of data is tagged with a label.
 This tag is used to route the data between the different steps.
 
 In the previous example the tag is specified after the key `match` : `app.access`.
-The tag of the data incoming is the URL of the request.
+The tag of the incoming data is the URL of the request.
 For example running `curl http://localhost:8888/myapp.access?json={"event":"data"}`
 will output `{"event":"data"}` to stdout.
 
@@ -128,8 +128,8 @@ Configuration
 
 ### Docker pushes its logs to Fluentd
 
-First of all, the Fluentd agent can be run anywhere, but for simplicity we will
-run it one the same node as the application.
+First of all, the Fluentd agent can be run anywhere, but for the sake of simplicity we will
+run it on the same node as the application.
 The [official image](https://hub.Docker.com/r/fluent/fluentd/) can be found on
 the Docker hub.
 
@@ -165,7 +165,7 @@ Fluentd:
     - ./conf:/Fluentd/etc
 ```
 
-The default logging option of Docker is json-file. We can use the [log-driver](https://docs.Docker.com/engine/reference/run/#logging-drivers-log-driver)
+The default logging format option for Docker is json-file. We can use the [log-driver](https://docs.Docker.com/engine/reference/run/#logging-drivers-log-driver)
 option to specify Fluentd. By default it will connect to `localhost` on the
 `24224` port.
 
@@ -179,7 +179,7 @@ nginx:
   log_opt:
     Fluentd-tag: "nginx.Docker.{{.Name }}"
 ```
-By default the Docker driver uses a default tag for Fluentd: `Docker._container-id_ `.
+The Docker driver uses a default tag for Fluentd: `Docker._container-id_ `.
 We override it to be `nginx.Docker._container-name_` with the `log_opt`,
 `Fluentd-tag: "nginx.Docker.{{.Name }}"`. The tag in the Docker driver must
 match the one in Fluentd. You should be able to see the Nginx logs in Fluentd
@@ -211,8 +211,8 @@ $ cat ./conf/Fluentd
 ```
 Don't forget to change the hosts to point to your Elasticsearch instance.
 
-The `logstash_format true` configuration is meant to make writing data into
-ElasticSearch compatible with what Logstash writes. By doing this, one could
+The `logstash_format true` configuration is meant to write data into an
+ElasticSearch compatible format with what Logstash writes. By doing this, one could
 take advantage of Kibana.
 
 You can run Fluentd with:
@@ -242,7 +242,7 @@ This line of log need to be parsed.
 
 
 Fluentd will need the [fluent-plugin-parser](https://github.com/tagomoris/fluent-plugin-parser)
-in order to format a specific field a second time. I have package the image with it [here](https://hub.Docker.com/r/thibautgery/fluent.d-es)
+in order to format a specific field a second time. I have packaged the image with it [here](https://hub.Docker.com/r/thibautgery/fluent.d-es)
 
 We need to update the configuration :
 
@@ -282,15 +282,15 @@ Here we use the tag's concept to route the data to the correct steps:
 
 ![Flow diagram of fluentd](http://i.imgur.com/9YeOcod.png)
 
-  1. the data arrive with the tag setup by docker driver :
+  1. the data arrives with the tag setup by docker driver :
 `nginx.docker._container-name_`
-  2. Fluentd send it to the second step
+  2. Fluentd sends it to the second step
   3. the tag is modified to `docker._container-name_`
-  4. the data goes through the third step
-  5. the data are sent to Elasticsearch
+  4. data goes through the third step
+  5. data is sent to Elasticsearch
 
 Then you can run the application and query it with your favorite browser to see
-the data correctly formated in Kibana.
+the data correctly formatted in Kibana.
 
 You can create diagrams from these data :
 ![Kibana result structured](http://i.imgur.com/SYVSPLH.png)
@@ -298,14 +298,14 @@ You can create diagrams from these data :
 Run it
 ------
 
-Your system will collect your logs from your application and send them to
+Your system will collect logs from your application and send them to
 Elasticsearch. The Docker engine will require to have Fluentd up and running to
 start your container.
 
-Nevertheless if Fluentd dies, your containers using Fluentd will continue to
-work properly. Furthermore, if Fluentd stop for short periods of time, you will
-not lose any logs because the Docker engine buffers the messages not sent. They
-are sent again when Fluentd is back online.
+Even if Fluentd dies, your containers using Fluentd will continue to
+work properly. Furthermore, if Fluentd stops for short periods of time, you will
+not lose any logs because the Docker engine buffers unsent messages so that they will be
+sent when Fluentd is back online.
 
 Finally, since Docker 1.9 you can show labels and environment variable with the
 logging driver of Docker. In our example, we added : `service: nginx` and it will
