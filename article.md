@@ -9,9 +9,9 @@ This article is built around an example where nginx is our application and
 Elasticsearch is our database and Kibana is the interface to show beautiful graphs
 and diagrams. The code of the example is available on [github](https://github.com/ThibautGery/Docker-logging-example).
 
-We need to collect and transport our logs from a distributed system to a
-centralize remote location in real time with reliability. That way, we can get
-an aggregate vision of the system in almost real time.
+We need to collect and transport our logs as a data flow from a distributed system to a
+centralized remote location. That way, we can get an aggregate vision of the system 
+in near real time.
 
 The logging system is plugged at the container level because the application
 should be loosely coupled with the logging system. Depending on the environment
