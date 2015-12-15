@@ -3,6 +3,7 @@ nginx:
   ports:
     - 80:80
   log_driver: fluentd
+  restart: always
   labels:
     service: nginx
   log_opt:
