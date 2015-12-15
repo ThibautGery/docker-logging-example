@@ -1,12 +1,12 @@
 Centralize logs from Docker applications
 ========================================
 
-The purpose of the article is to show how we can centralize logs from Docker
-application in a database where we can query them.
+This article aims showing how we can centralize logs from a Docker
+application in a database where we can then query them.
 
 
-This article is built around an example where nginx is our application and  
-Elasticsearch is our database and Kibana is the interface to show beautiful graphs
+This article is built around an example where our application only consists of an
+nginx instance, an Elasticsearch database, and Kibana to render beautiful graphs
 and diagrams. The code of the example is available on [github](https://github.com/ThibautGery/Docker-logging-example).
 
 We need to collect and transport our logs as a data flow from a distributed system to a
@@ -25,7 +25,7 @@ Architecture
 ### Choosing our middleware
 
 We need a tool to extract the logs from the Docker container and push them in [Elasticsearch](https://www.elastic.co/products/elasticsearch). In order to do that, we
-can use multiple tools like [Logstash](https://www.elastic.co/products/logstash)
+can choose between several tools like [Logstash](https://www.elastic.co/products/logstash)
 or [Fluentd](http://www.fluentd.org/).
 
 [Logstash](https://www.elastic.co/products/logstash) is built by
@@ -57,7 +57,7 @@ The process can be described in 6 steps
  3. Docker intercepts logs from the container and uses its native Fluentd output
  driver to send them to the Fluentd container running locally
  4. Fluentd parses and structures logs
- 5. Structured data are sent to elasticsearch in batches, we might have to
+ 5. Structured data are sent to Elasticsearch in batches, we might have to
  wait a minute or two for the data to arrive in Elasticsearch. We can
  parameterize this behavior with the
  [Buffer plugins](http://docs.fluentd.org/articles/buffer-plugin-overview)
@@ -83,7 +83,7 @@ nginx:
 
 ### Fluentd
 
-Fluentd is a middleware to collect logs, they flow through steps and are identified
+Fluentd is a middleware to collect logs which flow through steps and are identified
 with tags. Here is a simple configuration with two steps to receive logs through
 HTTP and print them to stdout:
 
