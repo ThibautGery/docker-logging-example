@@ -1,11 +1,11 @@
 Centralize logs from Docker applications
 ========================================
 
-This article aims showing how we can centralize logs from a Docker
+This article aims at showing how we can centralize logs from a Docker
 application in a database where we can then query them.
 
 
-This article is built around an example where our application only consists of an
+This article is built around an example where our application consists of an
 nginx instance, an Elasticsearch database, and Kibana to render beautiful graphs
 and diagrams. The code of the example is available on [github](https://github.com/ThibautGery/Docker-logging-example).
 
@@ -16,7 +16,7 @@ in near real time.
 The logging system is plugged at the container level because the application
 should be loosely coupled with the logging system. Depending on the environment
 (development, pre-production, production) we might not send logs to the same
-system: a file for development, elasticseach for pre-production, elasticseach
+system: a file for development, Elasticsearch for pre-production, Elasticsearch
 and HDFS for production.
 
 Architecture
